@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { CountdownTimer } from './CountdownTimer'
 import {
   LucideCircleQuestionMark,
@@ -22,6 +22,17 @@ import { track } from '../lib/track'
 import { preloadWalletSdks } from '../lib/walletSdk'
 
 type PaymentState = 'idle' | 'processing'
+
+// purchase_success is the A/B primary metric — it must fire exactly once per
+// order. Order ids that already tracked a purchase are remembered here so
+// double-taps, re-renders or remounts can never double-count a conversion.
+// wallet_selected is deduped the same way, keyed on order id + wallet.
+const trackedPurchaseOrderIds = new Set<string>()
+const trackedWalletKeys = new Set<string>()
+
+function newOrderId(): string {
+  return `order-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`
+}
 
 interface CheckoutModalProps {
   isOpen: boolean
@@ -808,16 +819,27 @@ export function CheckoutModal({
   const preferredWallet = getPreferredWallet()
   const [selectedMethod, setSelectedMethod] = useState<PayMethod>(preferredWallet)
 
+  // One order id per checkout session (regenerated each time the modal opens);
+  // all purchase_success / wallet_selected dedupe is keyed on it.
+  const orderIdRef = useRef(newOrderId())
+
   // Preferred wallet first, then the rest; Card last (spans the full row)
   const methodOrder: PayMethod[] =
     preferredWallet === 'apple_pay'
       ? ['apple_pay', 'google_pay', 'stripe_link', 'paypal', 'card']
       : ['google_pay', 'apple_pay', 'stripe_link', 'paypal', 'card']
 
+  const trackWalletSelected = (wallet: string) => {
+    const key = `${orderIdRef.current}:${wallet}`
+    if (trackedWalletKeys.has(key)) return
+    trackedWalletKeys.add(key)
+    track('wallet_selected', { wallet, order_id: orderIdRef.current })
+  }
+
   const handleMethodSelect = (method: PayMethod) => {
     setSelectedMethod(method)
     if (method !== 'card') {
-      track('wallet_selected', { wallet: method })
+      trackWalletSelected(method)
     }
   }
 
@@ -854,6 +876,8 @@ export function CheckoutModal({
 
   useEffect(() => {
     if (!isOpen) return
+    // Each checkout open starts a fresh order — new dedupe key.
+    orderIdRef.current = newOrderId()
     setSelectedMethod(preferredWallet)
     // Wallet SDKs mount on checkout open
     preloadWalletSdks()
@@ -865,15 +889,22 @@ export function CheckoutModal({
   if (!mounted) return null
 
   const handlePay = async (method: string = 'card') => {
+    // Re-entry guard: double-taps while the fake payment is processing must
+    // not run a second pay flow (state hasn't flushed yet on the first tap).
+    if (paymentState === 'processing') return
     setPaymentState('processing')
     await new Promise((r) => setTimeout(r, 1200))
 
-    track('purchase_success', { planId: plan.id, revenue: total, method })
+    const orderId = orderIdRef.current
+    if (!trackedPurchaseOrderIds.has(orderId)) {
+      trackedPurchaseOrderIds.add(orderId)
+      track('purchase_success', { planId: plan.id, revenue: total, method, order_id: orderId })
+    }
     onSuccess(plan)
   }
 
   const handleWalletPay = (wallet: string) => {
-    track('wallet_selected', { wallet })
+    trackWalletSelected(wallet)
     void handlePay(wallet)
   }
 

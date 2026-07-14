@@ -72,8 +72,8 @@ Events: `funnel_step_view` (every screen), `quiz_started`, `quiz_step_completed`
 `unlock_cta_clicked`, `plan_selected`, `checkout_initiated`, `wallet_shown`,
 `wallet_selected`, `purchase_success`.
 
-Keys/IDs are placeholders: set the PostHog key in `src/config/posthog.ts` and Convert goal
-IDs in `src/config/convert.ts`.
+The PostHog key is still a placeholder (`src/config/posthog.ts`); the Convert goal ids are
+live (`src/config/convert.ts`).
 
 ### Metric hierarchy
 
@@ -86,27 +86,32 @@ IDs in `src/config/convert.ts`.
 
 ## Convert.com setup
 
-Add real credentials to the snippet in `index.html`
-(`https://cdn-4.convertexperiments.com/js/ACCOUNT_ID-PROJECT_ID.js`).
+The snippet in `index.html` is live for project **100110152**
+(`//cdn-4.convertexperiments.com/v1/js/100110152.js`), loaded synchronously before the app
+bundle so the assignment exists by the time the variant resolver runs.
 
-Two workable setups — pick one:
+**How assignment flows:** the resolver (`src/variant/resolveVariant.ts`) reads the assigned
+variation from `window.convert.currentData` and maps the variation *name* to our variant
+key — name the variations in the dashboard `control`, `a`, `b`, `c`, `all` (or anything
+ending in the letter, e.g. "Variation A"). A variation's custom JS can also set
+`window.__csVariant = 'a'` directly, which takes priority over the name mapping. If Convert
+hasn't assigned anything, the pathname (`/` → all, `/a`/`/b`/`/c`) still works.
+`?force=control|all|a|b|c` is the QA override and always wins.
 
-**Option 1 (matches spec): one A/B/n Split-URL test.**
-Original (control) vs `/`, `/a`, `/b`, `/c`. Convert redirects visitors to the variation
-URL; the app derives the variant from the pathname. Simplest to launch; all arms share one
-traffic pool and one report.
+**Live in the dashboard:** Split-URL experience (Original = `?force=control`, variations
+`/a` `/b` `/c` at 25% each, All Visitors, Production) and four goals:
 
-**Option 2 (cleaner attribution): separate A/B tests.**
-One experience per route — Original vs `/`, Original vs `/a`, etc. Each change bundle gets
-its own report and its own significance calculation, at the cost of splitting traffic
-across experiments.
+| goal | id | trigger |
+| --- | --- | --- |
+| `purchase_success` (PRIMARY) | 100156908 | code-fired at pay-confirm, + revenue |
+| `offer_view` | 100156909 | **URL-based** (`/subscription`) — NOT code-fired, to avoid double-counting |
+| `checkout_initiated` | 100156910 | code-fired |
+| `add_to_cart` | 100156911 | code-fired (email submit) |
 
-In either setup a variation can also run custom JS
-`window.__csVariant = 'all' /* or 'a' | 'b' | 'c' | 'control' */` instead of redirecting.
-`?force=` always overrides Convert for QA.
-
-Map the Convert goal IDs in `src/config/convert.ts` — at minimum `purchase_success` +
-`purchase_revenue` (primary), `add_to_cart` and `checkout_initiated` (secondary).
+`track()` pushes `['triggerConversion', goalId]` to `window._conv_q` for the three
+code-fired goals (on top of the console debug output), and for `purchase_success`
+additionally `["pushRevenue", revenue, 1, goalId]`. Verifiable in Convert's
+live-log/debugger, or in the browser console via `window._conv_q`.
 
 ## QA checklist
 

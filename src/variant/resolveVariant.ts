@@ -18,10 +18,43 @@ function persist(variant: ActiveVariant) {
   }
 }
 
+/** Maps a Convert variation name to our variant key, e.g. "Variation A" → 'a'. */
+function variationNameToVariant(name: string): ActiveVariant | null {
+  const n = name.toLowerCase().trim()
+  if (isActiveVariant(n)) return n
+  if (n.includes('original') || n.includes('control')) return 'control'
+  if (n.includes('all')) return 'all'
+  const tail = n.match(/(?:^|[\s\-_(])([abc])\)?$/)
+  return tail && isActiveVariant(tail[1]) ? tail[1] : null
+}
+
+/**
+ * Bridges Convert.com's variation assignment into window.__csVariant.
+ * The snippet in index.html loads synchronously before the app bundle, so by the
+ * time this runs Convert has already bucketed the visitor and exposed the
+ * assignment on window.convert.currentData. A variation's custom JS may also set
+ * window.__csVariant directly — that always wins over this mapping.
+ */
+function applyConvertAssignment() {
+  if (isActiveVariant(window.__csVariant)) return
+
+  const data = window.convert?.currentData
+  const experiences = { ...data?.experiments, ...data?.experiences }
+  for (const exp of Object.values(experiences)) {
+    const name = exp?.variation?.name ?? exp?.variation_name
+    const variant = name ? variationNameToVariant(name) : null
+    if (variant) {
+      window.__csVariant = variant
+      return
+    }
+  }
+}
+
 /**
  * Resolves the active variant once per page load. Precedence:
  *   1. URL query ?force=control|all|a|b|c  (QA override — always wins)
- *   2. window.__csVariant                  (set by Convert.com at runtime)
+ *   2. window.__csVariant                  (variation assigned by Convert.com —
+ *      set by variation JS or bridged from window.convert.currentData)
  *   3. Pathname: / → all, /a → a, /b → b, /c → c
  *   4. localStorage['cs_variant']          (keeps refreshes on /quiz etc. stable)
  *   5. Default → control
@@ -35,6 +68,8 @@ export function resolveVariant(): ActiveVariant {
     persist(force)
     return resolved
   }
+
+  applyConvertAssignment()
 
   if (isActiveVariant(window.__csVariant)) {
     resolved = window.__csVariant
