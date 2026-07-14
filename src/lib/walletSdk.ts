@@ -1,5 +1,4 @@
 // Fake wallet SDK init — this is a CRO mock, there is no real payment backend.
-// change4b_loadSdksEarly calls this on offer-page load instead of checkout open.
 
 let initialized = false
 

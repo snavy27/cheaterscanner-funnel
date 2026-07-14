@@ -62,14 +62,6 @@ Resolved once on load in `src/variant/resolveVariant.ts`:
 `VariantProvider` exposes `activeVariant` and the derived `changes` object via
 `useVariant()`; every screen reads `changes.changeN` to pick control vs. changed rendering.
 
-### Backlog flags (NOT wired into a/b/c)
-
-In `src/variant/flags.ts`:
-
-- `change4b_loadSdksEarly` — mount wallet SDKs on offer-page load instead of checkout open.
-- `change4c_softenUrgency` — reduce/remove the countdown. **Risky:** their own
-  subscription-cro-test data leans toward *keeping* urgency. Backlog idea only.
-
 ## Analytics
 
 `src/lib/track.ts` → `track(event, props)` fires to both PostHog and Convert, always

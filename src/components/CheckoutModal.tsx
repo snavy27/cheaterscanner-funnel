@@ -20,7 +20,6 @@ import {
 } from '../lib/plans'
 import { track } from '../lib/track'
 import { preloadWalletSdks } from '../lib/walletSdk'
-import { BACKLOG_FLAGS } from '../variant/flags'
 
 type PaymentState = 'idle' | 'processing'
 
@@ -856,7 +855,7 @@ export function CheckoutModal({
   useEffect(() => {
     if (!isOpen) return
     setSelectedMethod(preferredWallet)
-    // Wallet SDKs mount on checkout open (change4b flag moves this to offer-page load)
+    // Wallet SDKs mount on checkout open
     preloadWalletSdks()
     if (walletFirst) {
       track('wallet_shown', { wallet: preferredWallet })
@@ -963,24 +962,20 @@ export function CheckoutModal({
 
             {/* Payment section */}
             <div className="checkout-payment-block mt-12">
-              {/* Keep the countdown — their own experiment data favors urgency.
-                  change4c_softenUrgency is a risky backlog flag, not a variant. */}
-              {!BACKLOG_FLAGS.change4c_softenUrgency && (
-                <div className="mb-5 flex w-full items-center justify-between rounded-lg bg-gradient-to-b from-[#FF6252] via-[#FF5864] to-[#F93A50] px-4 py-2.5 text-white">
-                  <div className="flex items-center">
-                    <LucideClock className="mr-2 h-[18px] w-[18px] text-white opacity-90" />
-                    <span className="font-bold" style={sairaStyle}>
-                      Offer expires in:
-                    </span>
-                    <div className="ml-2 rounded-lg border border-white/30 bg-white/20 px-3 py-1 font-mono font-bold backdrop-blur-sm">
-                      <CountdownTimer initialMinutes={9} initialSeconds={59} />
-                    </div>
-                  </div>
-                  <span className="text-sm text-white" style={sairaStyle}>
-                    Complete order now
+              <div className="mb-5 flex w-full items-center justify-between rounded-lg bg-gradient-to-b from-[#FF6252] via-[#FF5864] to-[#F93A50] px-4 py-2.5 text-white">
+                <div className="flex items-center">
+                  <LucideClock className="mr-2 h-[18px] w-[18px] text-white opacity-90" />
+                  <span className="font-bold" style={sairaStyle}>
+                    Offer expires in:
                   </span>
+                  <div className="ml-2 rounded-lg border border-white/30 bg-white/20 px-3 py-1 font-mono font-bold backdrop-blur-sm">
+                    <CountdownTimer initialMinutes={9} initialSeconds={59} />
+                  </div>
                 </div>
-              )}
+                <span className="text-sm text-white" style={sairaStyle}>
+                  Complete order now
+                </span>
+              </div>
 
               {walletFirst ? (
                 /* change4 — payment method tiles in a 2-col grid; OS-preferred wallet

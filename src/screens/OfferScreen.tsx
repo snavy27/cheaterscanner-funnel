@@ -28,8 +28,6 @@ import {
 import { useOfferTimer } from '../lib/offerTimer'
 import { PLANS, formatEuro, getOrderTotal, getPlanById } from '../lib/plans'
 import { track } from '../lib/track'
-import { preloadWalletSdks } from '../lib/walletSdk'
-import { BACKLOG_FLAGS } from '../variant/flags'
 import { useVariant } from '../variant/useVariant'
 
 interface OfferScreenProps {
@@ -65,9 +63,6 @@ function WhyIcon({ type }: { type: (typeof WHY_YOU_NEED)[number]['icon'] }) {
 
 function StickyHeader({ onGetAccess }: { onGetAccess: () => void }) {
   const { isActive, display } = useOfferTimer()
-
-  // change4c backlog flag only — their own experiment data favors KEEPING urgency.
-  if (BACKLOG_FLAGS.change4c_softenUrgency) return null
 
   if (!isActive) return null
 
@@ -134,13 +129,6 @@ export function OfferScreen({
       setTracked(true)
     }
   }, [tracked])
-
-  useEffect(() => {
-    // change4b backlog flag: mount wallet SDKs on offer-page load, not checkout open
-    if (BACKLOG_FLAGS.change4b_loadSdksEarly) {
-      preloadWalletSdks()
-    }
-  }, [])
 
   const scrollToPlans = () => {
     document.getElementById('subscription-plans')?.scrollIntoView({ behavior: 'smooth' })
