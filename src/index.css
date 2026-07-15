@@ -14,6 +14,7 @@
 body {
   font-family: var(--font-body);
   margin: 0;
+  background-color: #fff;
   -webkit-font-smoothing: antialiased;
 }
 

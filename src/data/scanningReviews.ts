@@ -109,6 +109,12 @@ export const SCANNING_REVIEWS: ScanningReview[] = [
     time: '5 days ago',
   },
   {
+    name: 'Carlos M.',
+    text: 'She told me she was done with dating apps. Found her profile still live with a bio that said "single and looking." I saw enough.',
+    location: 'United States',
+    time: '1 week ago',
+  },
+  {
     name: 'Stephanie R.',
     text: 'Used this before our first date to make sure he was who he said he was. Everything checked out. Felt so much safer meeting him.',
     location: 'United States',

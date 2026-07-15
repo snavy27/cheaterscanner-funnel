@@ -12,6 +12,7 @@ interface QuizScreenProps {
   onBack?: () => void
   onSubmit: (value: string) => void
   canProceed?: (value: string) => boolean
+  errorForValue?: (value: string) => string | null
   lockNextButton?: boolean
 }
 
@@ -29,11 +30,13 @@ export function QuizScreen({
   onBack,
   onSubmit,
   canProceed,
+  errorForValue,
   lockNextButton = false,
 }: QuizScreenProps) {
   const [value, setValue] = useState(defaultValue)
   const isInput = !options
   const nextDisabled = lockNextButton && canProceed ? !canProceed(value) : false
+  const errorMessage = errorForValue ? errorForValue(value) : null
 
   useEffect(() => {
     setValue(defaultValue)
@@ -71,17 +74,38 @@ export function QuizScreen({
         </h2>
 
         {isInput ? (
-          <div className="mb-4 w-full">
-            <input
-              type={inputPlaceholder?.toLowerCase().includes('age') ? 'number' : 'text'}
-              inputMode={inputPlaceholder?.toLowerCase().includes('age') ? 'numeric' : 'text'}
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
-              placeholder={inputPlaceholder}
-              className={inputClass}
-              onKeyDown={(e) => e.key === 'Enter' && handleNext()}
-            />
-          </div>
+          <>
+            <div className="mb-4 w-full">
+              <input
+                type={inputPlaceholder?.toLowerCase().includes('age') ? 'number' : 'text'}
+                inputMode={inputPlaceholder?.toLowerCase().includes('age') ? 'numeric' : 'text'}
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
+                placeholder={inputPlaceholder}
+                className={inputClass}
+                onKeyDown={(e) => e.key === 'Enter' && handleNext()}
+              />
+            </div>
+            {errorMessage && (
+              <div className="mt-3 flex items-center gap-2 rounded-lg border border-[#FECACA] bg-[#FEF2F2] p-3">
+                <div className="shrink-0">
+                  <svg className="h-5 w-5 text-[#EF4444]" fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                      fillRule="evenodd"
+                      d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </div>
+                <div
+                  className="text-sm font-medium text-[#B91C1C]"
+                  style={{ fontFamily: 'Arial, Helvetica, sans-serif' }}
+                >
+                  {errorMessage}
+                </div>
+              </div>
+            )}
+          </>
         ) : (
           <div className="space-y-3">
             {options!.map((opt) => (

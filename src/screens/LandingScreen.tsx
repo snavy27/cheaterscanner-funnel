@@ -84,7 +84,7 @@ export function LandingScreen({ onSelect }: LandingScreenProps) {
             </div>
 
             <h1
-              className="relative z-30 mb-4 w-full text-center text-[48px] font-black uppercase leading-[42px] text-white sm:w-[400px] sm:text-[72px] sm:leading-[62px]"
+              className="relative z-30 mb-4 w-full text-center text-[72px] font-black uppercase leading-[62px] text-white sm:w-[400px]"
               style={{ fontFamily: 'var(--font-display)' }}
             >
               Find Out If

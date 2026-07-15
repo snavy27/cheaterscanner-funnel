@@ -71,21 +71,14 @@ export function ScanningReviewsSection() {
   return (
     <section className="pt-7 pb-10">
       <div className="px-5">
-        <h2
-          className="mb-2 text-[22px] leading-tight font-extrabold tracking-tight text-white"
-          style={{ fontFamily: 'var(--font-display)' }}
-        >
+        {/* Live renders these in Arial (site default), not Saira Condensed */}
+        <h2 className="mb-2 text-[22px] leading-tight font-extrabold tracking-tight text-white">
           Thousands Have Already
           <br />
           Found The Truth
         </h2>
-        <p
-          className="mb-5 flex flex-wrap items-center gap-1 text-[13px] font-bold text-white"
-          style={{ fontFamily: 'var(--font-display)' }}
-        >
-          Excellent ⭐⭐⭐⭐⭐{' '}
-          <strong className="font-extrabold text-white">4.75</strong> based on{' '}
-          <strong className="font-extrabold text-white">816 reviews</strong>
+        <p className="mb-5 text-[13px] font-semibold text-white">
+          Excellent ⭐⭐⭐⭐⭐ 4.75 based on 816 reviews
         </p>
       </div>
 

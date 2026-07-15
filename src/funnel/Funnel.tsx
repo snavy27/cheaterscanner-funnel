@@ -66,6 +66,16 @@ function isValidAge(value: string) {
   return !isNaN(age) && age >= 18 && age <= 99
 }
 
+// Mirrors live: banner appears while typing, hidden when the field is empty.
+function ageErrorForValue(value: string): string | null {
+  const trimmed = value.trim()
+  if (!trimmed) return null
+  const age = parseInt(trimmed, 10)
+  if (isNaN(age) || age < 18) return 'Age must be 18 or older to proceed'
+  if (age > 99) return 'Age must be 99 or younger to proceed'
+  return null
+}
+
 function isValidName(value: string) {
   return value.trim().length > 0
 }
@@ -270,6 +280,7 @@ export function Funnel() {
             onBack={goToPrevious}
             onSubmit={(age) => goToNext({ age })}
             canProceed={isValidAge}
+            errorForValue={ageErrorForValue}
           />
         )
 

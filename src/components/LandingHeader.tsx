@@ -24,7 +24,7 @@ export function LandingHeader() {
           <div className="flex items-center">
             <div className="relative h-10 w-10 md:hidden">
               <img
-                src="/favicon.svg"
+                src="/cheaterscanner_favicon.png"
                 alt="CheaterScanner"
                 className="h-full w-full object-contain brightness-0 invert"
               />
@@ -86,14 +86,14 @@ export function LandingHeader() {
           <div className="flex items-center gap-1 md:hidden">
             <button
               type="button"
-              className={`${textNavBtn} py-2 text-sm hover:bg-white/10`}
+              className="cursor-pointer rounded-lg px-3 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-white/10 hover:text-gray-200"
               style={navFont}
             >
               Login
             </button>
             <button
               type="button"
-              className="cursor-pointer p-2 text-white transition-colors duration-200 hover:bg-white/10"
+              className="cursor-pointer rounded-lg p-2 text-white transition-colors duration-200 hover:bg-white/10"
               aria-label="Toggle menu"
             >
               <svg

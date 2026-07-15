@@ -267,6 +267,7 @@ export function PrePaywallLoadingOverlay({
       className={`fixed inset-0 z-50 overflow-y-auto bg-gradient-to-b from-[#FF6252] via-[#FF5864] to-[#F93A50] transition-[filter] duration-300 ${
         blurred ? 'blur-sm' : ''
       }`}
+      style={{ fontFamily: 'Arial, Helvetica, sans-serif' }}
     >
       <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
         <ScanningHeader name={name} progress={progress} isDone={isDone} />

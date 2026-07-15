@@ -6,6 +6,7 @@ const STEPS = [
     title: 'We Learn About Your Partner',
     body: "Our AI securely stores your partner's photo, name, and location to create a detailed profile for scanning.",
     image: '/onboarding-1.png',
+    image1x: '/onboarding-1-1x.png',
     icon: 'user' as const,
   },
   {
@@ -13,6 +14,7 @@ const STEPS = [
     title: 'We Scan the Dating Apps',
     body: "CheaterScanner swipes through Tinder, Bumble, and Hinge profiles in your partner's area, just like a real user would—only faster and smarter. We are not affiliated with Tinder, Bumble, or Hinge. All trademarks are property of their respective owners. We only use publicly available information and never use unauthorized scraping or automated access.",
     image: '/onboarding-2.png',
+    image1x: '/onboarding-2-1x.png',
     icon: 'check' as const,
   },
   {
@@ -20,11 +22,14 @@ const STEPS = [
     title: 'You Get Instant Alerts',
     body: "If a profile matching your partner is found, you'll receive an immediate notification, complete with screenshots and details.",
     image: '/onboarding-3.png',
+    image1x: '/onboarding-3-1x.png',
     icon: 'info' as const,
   },
 ] as const
 
 const headerFont = { fontFamily: 'var(--font-display)' }
+// Live modal body copy renders in Arial (site default), not Roboto
+const bodyFont = { fontFamily: 'Arial, Helvetica, sans-serif' }
 
 function StepIcon({ type }: { type: 'user' | 'check' | 'info' }) {
   if (type === 'user') {
@@ -91,7 +96,7 @@ export function PhotoOnboardingModal({ isOpen, onComplete, onClose }: PhotoOnboa
           onClick={onClose}
         />
 
-        <div className="relative my-8 inline-block w-full max-w-md overflow-hidden rounded-lg bg-white text-left shadow-xl">
+        <div className="relative my-8 inline-block w-full max-w-md overflow-hidden rounded-[5px] bg-white text-left shadow-xl">
           <div className="bg-[#A61A25] px-6 py-4">
             <div className="flex items-center justify-start">
               <div className="mr-3 flex h-6 w-6 items-center justify-center rounded-full bg-white">
@@ -106,12 +111,14 @@ export function PhotoOnboardingModal({ isOpen, onComplete, onClose }: PhotoOnboa
           <div className="px-6 py-6">
             <div className="mb-4">
               <div className="flex items-center justify-center">
+                {/* Mirrors live next/image sizing: 1x → 256×148 intrinsic, 2x/3x → 266×154 */}
                 <img
-                  src={step.image}
+                  src={step.image1x}
+                  srcSet={`${step.image1x} 1x, ${step.image} 2x`}
                   alt={step.header}
                   width={200}
                   height={120}
-                  className="h-[148px] w-[256px] max-w-full object-contain"
+                  className="h-auto w-auto"
                 />
               </div>
             </div>
@@ -120,7 +127,9 @@ export function PhotoOnboardingModal({ isOpen, onComplete, onClose }: PhotoOnboa
               <h4 className="mb-3 text-xl font-bold text-gray-900" style={headerFont}>
                 {step.title}
               </h4>
-              <p className="text-sm leading-relaxed text-gray-600">{step.body}</p>
+              <p className="text-sm leading-relaxed text-gray-600" style={bodyFont}>
+                {step.body}
+              </p>
             </div>
 
             <div className="mb-6 flex justify-center space-x-2">
@@ -137,14 +146,15 @@ export function PhotoOnboardingModal({ isOpen, onComplete, onClose }: PhotoOnboa
                 <button
                   type="button"
                   onClick={onComplete}
-                  className="flex-1 cursor-pointer rounded-lg bg-white px-6 py-3 text-base font-medium text-[#A61A25] shadow-md transition-colors hover:bg-gray-100 focus:outline-none"
+                  className="flex-1 cursor-pointer rounded-[5px] bg-white px-6 py-3 text-base font-medium text-[#A61A25] shadow-md transition-colors hover:bg-gray-100 focus:outline-none"
+                  style={bodyFont}
                 >
                   Skip
                 </button>
                 <button
                   type="button"
                   onClick={handleNext}
-                  className="flex-1 cursor-pointer rounded-lg bg-[#A61A25] px-6 py-3 text-base font-medium text-white shadow-md transition-colors hover:bg-[#8B1722] focus:outline-none"
+                  className="flex-1 cursor-pointer rounded-[5px] bg-[#A61A25] px-6 py-3 text-base font-medium text-white shadow-md transition-colors hover:bg-[#8B1722] focus:outline-none"
                   style={headerFont}
                 >
                   Next &gt;
@@ -155,7 +165,7 @@ export function PhotoOnboardingModal({ isOpen, onComplete, onClose }: PhotoOnboa
                 <button
                   type="button"
                   onClick={handleNext}
-                  className="w-full cursor-pointer rounded-lg bg-[#A61A25] px-6 py-3 text-base font-medium text-white shadow-md transition-colors hover:bg-[#8B1722] focus:outline-none"
+                  className="w-full cursor-pointer rounded-[5px] bg-[#A61A25] px-6 py-3 text-base font-medium text-white shadow-md transition-colors hover:bg-[#8B1722] focus:outline-none"
                   style={headerFont}
                 >
                   {isLast ? 'Got it!' : 'Next >'}

@@ -38,7 +38,11 @@ export function EmailAuthModal({
           onClick={onClose}
         />
 
-        <div className="relative my-8 inline-block w-full max-w-md transform overflow-hidden rounded-lg bg-white p-6 text-left shadow-xl">
+        {/* Arial matches live's site-default font; headline and CTA override with Saira Condensed */}
+        <div
+          className="relative my-8 inline-block w-full max-w-md transform overflow-hidden rounded-[5px] bg-white p-6 text-left shadow-xl"
+          style={{ fontFamily: 'Arial, Helvetica, sans-serif' }}
+        >
           <div className="px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <h3
               className="mb-4 text-center text-2xl font-bold text-gray-900"
@@ -49,7 +53,7 @@ export function EmailAuthModal({
               to get the report
             </h3>
 
-            <div className="mb-4 rounded-md bg-blue-50 p-3">
+            <div className="mb-4 rounded-[5px] bg-blue-50 p-3">
               <div className="mb-1 flex items-center justify-center">
                 <svg
                   className="mr-1 h-7 w-7 shrink-0 text-blue-700"
@@ -59,7 +63,7 @@ export function EmailAuthModal({
                 >
                   <path d="M12 2.002a3.875 3.875 0 0 0-3.875 3.875c0 2.92 1.207 6.552 1.813 8.199a2.19 2.19 0 0 0 2.064 1.423c.904 0 1.739-.542 2.063-1.418c.606-1.64 1.81-5.254 1.81-8.204A3.875 3.875 0 0 0 12 2.002M12.001 17a2.501 2.501 0 1 0 0 5.002a2.501 2.501 0 0 0 0-5.002" />
                 </svg>
-                <p className="text-center font-normal text-blue-700" style={{ fontSize: '15px' }}>
+                <p className="text-center font-medium text-blue-700" style={{ fontSize: '15px' }}>
                   <span className="font-bold">Important!</span> Enter a real email
                   <br />
                   address to receive the report
@@ -82,7 +86,7 @@ export function EmailAuthModal({
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email"
                   required
-                  className="block w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-black transition-colors focus:outline-none"
+                  className="block w-full rounded-[5px] border border-gray-200 bg-white px-4 py-3 text-black transition-colors focus:outline-none"
                 />
               </div>
 
@@ -109,7 +113,7 @@ export function EmailAuthModal({
               <div className="mt-4 flex flex-col">
                 <button
                   type="submit"
-                  className="w-full cursor-pointer rounded-lg bg-[#A61A25] px-6 py-3 text-base font-medium text-white shadow-md transition-colors hover:bg-[#8B1722] focus:outline-none"
+                  className="w-full cursor-pointer rounded-[5px] bg-[#A61A25] px-6 py-3 text-base font-medium text-white shadow-md transition-colors hover:bg-[#8B1722] focus:outline-none"
                   style={headerFont}
                 >
                   Get Cheating Report
