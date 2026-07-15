@@ -86,9 +86,9 @@ live (`src/config/convert.ts`).
 
 ## Convert.com setup
 
-The snippet in `index.html` is live for project **100110152**
-(`//cdn-4.convertexperiments.com/v1/js/100110152.js`), loaded synchronously before the app
-bundle so the assignment exists by the time the variant resolver runs.
+The snippet in `index.html` is live for account **10019794**, project **100110152**
+(`//cdn-4.convertexperiments.com/v1/js/10019794-100110152.js`), loaded synchronously before
+the app bundle so the assignment exists by the time the variant resolver runs.
 
 **How assignment flows:** the resolver (`src/variant/resolveVariant.ts`) reads the assigned
 variation from `window.convert.currentData` and maps the variation *name* to our variant
