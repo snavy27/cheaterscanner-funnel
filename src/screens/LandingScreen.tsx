@@ -10,7 +10,7 @@ interface LandingScreenProps {
 
 export function LandingScreen({ onSelect }: LandingScreenProps) {
   useEffect(() => {
-    track('$pageview', { path: '/' })
+    track('$pageview', { path: window.location.pathname })
   }, [])
 
   return (

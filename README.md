@@ -67,10 +67,11 @@ Resolved once on load in `src/variant/resolveVariant.ts`:
 `src/lib/track.ts` → `track(event, props)` fires to both PostHog and Convert, always
 attaching `cs_variant`, current `step`, and `device`/`os`.
 
-Events: `funnel_step_view` (every screen), `quiz_started`, `quiz_step_completed`,
-`add_to_cart` (email submit), `offer_view`, `matches_tile_tapped`, `match_teaser_revealed`,
-`unlock_cta_clicked`, `plan_selected`, `checkout_initiated`, `wallet_shown`,
-`wallet_selected`, `purchase_success`.
+Events: `$pageview` (landing + offer page), `funnel_step_view` (every screen),
+`quiz_started`, `quiz_step_completed`, `add_to_cart` (email submit), `offer_view`,
+`matches_tile_tapped`, `match_teaser_revealed`, `unlock_cta_clicked`, `plan_selected`,
+`checkout_initiated`, `wallet_shown`, `wallet_selected`, `purchase_success`,
+`upsell` (with `action: accept|decline` per upsell screen), `signup_completed`.
 
 The PostHog key is still a placeholder (`src/config/posthog.ts`); the Convert goal ids are
 live (`src/config/convert.ts`).
