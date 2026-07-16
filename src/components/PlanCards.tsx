@@ -6,7 +6,7 @@ interface PlanCardsProps {
   plans: Plan[]
   selectedPlanId: string
   selectable: boolean
-  /** change5 — evident selected state: strong highlight + checkmark + "Selected" label */
+  /** change5 — evident selected state: strong highlight + checkmark */
   evident?: boolean
   onSelect?: (planId: string) => void
 }
@@ -98,23 +98,12 @@ export function PlanCards({ plans, selectedPlanId, selectable, evident = false, 
                     }`}
                   />
                 )}
-                <div className="flex-1">
-                  <h3
-                    className="text-lg sm:text-xl font-bold text-gray-900"
-                    style={sairaStyle}
-                  >
-                    {plan.name}
-                  </h3>
-                  {evidentSelected && (
-                    <span
-                      className="mt-0.5 inline-flex items-center gap-1 rounded-full bg-[#EC3A49] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white"
-                      style={sairaStyle}
-                    >
-                      <CheckIcon className="w-2.5 h-2.5" />
-                      Selected
-                    </span>
-                  )}
-                </div>
+                <h3
+                  className="text-lg sm:text-xl font-bold text-gray-900 flex-1"
+                  style={sairaStyle}
+                >
+                  {plan.name}
+                </h3>
               </div>
               <div className="flex flex-col items-end">
                 <div className="flex items-center mb-1">

@@ -146,7 +146,7 @@ export function OfferScreen({
     <div className="min-h-screen bg-white">
       <main>
         <div className="bg-white relative">
-          <StickyHeader onGetAccess={() => onCheckout('sticky_header')} />
+          <StickyHeader onGetAccess={scrollToPlans} />
 
           <div className="flex flex-col bg-white text-white">
             {/* Search results hero */}
