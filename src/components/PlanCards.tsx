@@ -69,6 +69,15 @@ export function PlanCards({ plans, selectedPlanId, selectable, evident = false, 
               selectable ? 'cursor-pointer' : ''
             }`}
           >
+            {evidentSelected && (
+              <span
+                className="absolute -top-3 right-3 inline-flex items-center gap-1 rounded-full bg-[#EC3A49] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white"
+                style={{ ...sairaStyle, boxShadow: 'rgba(0, 0, 0, 0.05) 0px 1px 2px 0px' }}
+              >
+                <CheckIcon className="w-2.5 h-2.5" />
+                Selected
+              </span>
+            )}
             {plan.popular && (
               <div
                 className="absolute -top-3 left-1/2 bg-[#EC3A49] text-white text-xs px-3 py-0.5 rounded-full font-bold uppercase"
